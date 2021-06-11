@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
 from dataloader import dataloader
-
+import random
 import torch.nn as nn
 
 class Conv(nn.Module):
@@ -61,13 +61,39 @@ def train_conv(model, num_epochs, lr=0.001, device='cuda'):
             optimizer.step()
             
             cum_loss += loss.item()
+            #print('working' + random.choice(['/','|']))
          
 
         print("Epoch %d, Loss=%.4f" % (epoch+1, cum_loss/len(dataloader)))
 
+
+def calculate_accuracy_conv(model, device = 'cuda', data_loader=dataloader):
+    model = model.to(device)
+
+    correct = 0
+    total = 0
+    for (inputs, labels) in data_loader:
+
+        inputs = inputs.to(device)  # 64 x 28 x 28
+        labels = labels.to(device)
+
+        # inputs = inputs.view(-1, 28 * 28) # 64 x 784
+
+        predictions = model(inputs)  # 64 x 10
+        
+        correct += (predictions.argmax(dim=1) == labels).sum()
+        total += len(labels)
+
+    return correct / total
 
 model = Conv(num_classes=6)
 train_conv(
     model = model,
     num_epochs = 10,
 )
+
+print(calculate_accuracy_conv(
+
+    model = model,
+
+))

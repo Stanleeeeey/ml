@@ -30,7 +30,7 @@ class FlowerDataset(Dataset):
         return datapoint, self.label_to_int[label]
 
 dataset = FlowerDataset(path, transform=transforms.Compose([
-            transforms.Resize((240, 240)),
+            transforms.Resize((200, 200)),
             transforms.ToTensor(),
         ]))
 dataloader = DataLoader(dataset)
